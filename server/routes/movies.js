@@ -17,3 +17,15 @@ router.get('/trending', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch trending movies'})
     }
 });
+
+//api request for movies by genre
+router.get('/genres', async (req, res) => {
+    try {
+        const response = await axios.get('https://api.themoviedb.org/3/genre/movie/list', {
+            params: { api_key: TMDB_API_KEY }
+        })
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch movies by genre'})
+    }
+})
