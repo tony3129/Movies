@@ -29,3 +29,5 @@ router.get('/genres', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch movies by genre'})
     }
 })
+
+module.exports = router;
