@@ -1,0 +1,19 @@
+//setup dependencies
+const express = require('express');
+const axios = require('axios');
+const router = express.Router();
+
+//api key stored in .env file (not accessible on github)
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
+
+//api request for trending movies for current week
+router.get('/trending', async (req, res) => {
+    try{
+        const response = await axios.get('https://api.themoviedb.org/3/trending/movie/week', {
+            params: { api_key: TMDB_API_KEY }
+        });
+        res.json(response.data);
+    } catch(err){
+        res.status(500).json({ error: 'Failed to fetch trending movies'})
+    }
+});
