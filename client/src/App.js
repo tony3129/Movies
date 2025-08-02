@@ -17,7 +17,7 @@ function App() {
     .then((res) => res.json())
     .then((data) => setTrending(data.results));
 
-    fetch('api/genres')
+    fetch('/api/genres')
     .then((res) => res.json())
     .then((data) => setGenres(data.results));
   }, []);
@@ -30,8 +30,21 @@ function App() {
       .then((data) => setGenreMovies(data.results));
     }
   },[selectedGenre]);
+
+
   return (
-    <></>
+    <div style={{ padding: '1rem '}}>
+      <h1>Trending Movies</h1>
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {/*create MovieCard for each movie*/}
+        {trending.map((movie)=>{
+          return <MovieCard key={movie.id} movie={movie}/>
+        })}
+      </div>
+
+      <h2>Select Genre</h2>
+      
+    </div>
   );
 }
 
