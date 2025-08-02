@@ -30,4 +30,21 @@ router.get('/genres', async (req, res) => {
     }
 })
 
+//api request for movies by selected genre
+router.get('/genres/:genreID', async (req, res) =>{
+    try{
+        const { genreID } = req.params;
+        const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+            params: { 
+                api_key: TMDB_API_KEY,
+                with_genres: genreID
+            }
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch movies by selected genre'})
+    }
+    
+})
+
 module.exports = router;
