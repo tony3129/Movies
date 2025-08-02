@@ -44,7 +44,6 @@ router.get('/genres/:genreID', async (req, res) =>{
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch movies by selected genre'})
     }
-    
 })
 
 module.exports = router;
