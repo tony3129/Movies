@@ -3,12 +3,13 @@ import './App.css';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import MovieCard from './components/MovieCard';
+import GenreDropdown from './components/GenreDropdown';
 
 function App() {
   //states to hold movie information
   const [trending, setTrending] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState([]);
-  const [genres, setGenres] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [genres, setGenres] = useState([]);
   const [genreMovies, setGenreMovies] = useState([]);
 
   //calls to populate trending and genre data on first mount
@@ -19,7 +20,9 @@ function App() {
 
     fetch('/api/genres')
     .then((res) => res.json())
-    .then((data) => setGenres(data.results));
+    .then((data) => 
+      //fixed data member name: results => genres
+      setGenres(data.genres));
   }, []);
 
   //populate genremovies based on selected genre
@@ -27,7 +30,8 @@ function App() {
     if(selectedGenre){
       fetch(`/api/genres/${selectedGenre}`)
       .then((res) => res.json())
-      .then((data) => setGenreMovies(data.results));
+      //added safety for if returned fetch is empty
+      .then((data) => setGenreMovies(data?.results || []));
     }
   },[selectedGenre]);
 
@@ -43,7 +47,21 @@ function App() {
       </div>
 
       <h2>Select Genre</h2>
-      
+      {/*Pass setSelectedGenre to GenreDropDown component*/}
+      <GenreDropdown genres={genres} onSelect={setSelectedGenre}/>
+
+      {genreMovies.length > 0 && (
+        <>
+          {/*use + to convert string to number, and ? for match or for undefined*/}
+          <h3>Movies in {' '} {genres.find((g)=> g.id === +selectedGenre)?.name}</h3>
+          <div style={{ display:'flex', flexWrap: 'wrap' }}>
+            {/*Create MovieCard for each matched movie*/}
+            {genreMovies.map((movie)=>{
+              return <MovieCard key={movie.id} movie={movie}/>
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
