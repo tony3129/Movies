@@ -53,7 +53,7 @@ function App() {
       {genreMovies.length > 0 && (
         <>
           {/*use + to convert string to number, and ? for match or for undefined*/}
-          <h3>Movies in {' '} {genres.find((g)=> g.id === +selectedGenre)?.name}</h3>
+          <h3>Most Popular Movies in {' '} {genres.find((g)=> g.id === +selectedGenre)?.name}</h3>
           <div style={{ display:'flex', flexWrap: 'wrap' }}>
             {/*Create MovieCard for each matched movie*/}
             {genreMovies.map((movie)=>{
