@@ -46,4 +46,17 @@ router.get('/genres/:genreID', async (req, res) =>{
     }
 })
 
+//api request for movies by search parameter
+router.get('search', async (req,res)=>{
+    try{
+        const { query } = req.params;
+        const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+            params: {
+                api_key: TMDB_API_KEY,
+                query
+            }
+        })
+    }
+})
+
 module.exports = router;
