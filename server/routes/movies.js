@@ -50,12 +50,19 @@ router.get('/genres/:genreID', async (req, res) =>{
 router.get('search', async (req,res)=>{
     try{
         const { query } = req.params;
+        //check if query is valid (not empty string, undefined, etc)
+        if(!query){
+            return res.status(400).json({ error: 'Missing query parameter' })
+        }
         const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
             params: {
                 api_key: TMDB_API_KEY,
                 query
             }
         })
+        res.json(response.data);
+    }catch (err){
+        res.status(500).json({ error: 'Failed to search movie' });
     }
 })
 
