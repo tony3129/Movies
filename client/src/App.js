@@ -105,7 +105,7 @@ function App() {
           <h2>Search Results</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap'}}>
             {searchResults.map((movie)=>{
-              return <MovieCard key={movie.id} movie={movie}/>
+              return <MovieCard key={movie.id} movie={movie} onClick={() => handleMovieClick(movie.id)}/>
             })}
           </div>
         </>
@@ -115,7 +115,7 @@ function App() {
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
             {/*create MovieCard for each movie*/}
             {trending.map((movie)=>{
-              return <MovieCard key={movie.id} movie={movie}/>
+              return <MovieCard key={movie.id} movie={movie} onClick={() => handleMovieClick(movie.id)}/>
             })}
           </div>
 
@@ -130,12 +130,43 @@ function App() {
               <div style={{ display:'flex', flexWrap: 'wrap' }}>
                 {/*Create MovieCard for each matched movie*/}
                 {genreMovies.map((movie)=>{
-                  return <MovieCard key={movie.id} movie={movie}/>
+                  return <MovieCard key={movie.id} movie={movie} onClick={() => handleMovieClick(movie.id)}/>
                 })}
               </div>
             </>
           )}
         </>
+      )}
+      {movieDetails && (
+        //temp style for modal 
+        <div style={{
+          position: 'fixed',
+          top: '10%',
+          left: '10%',
+          width: '80%',
+          backgroundColor: 'white',
+          padding: '1rem',
+          boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+          zIndex: 999
+        }}>
+          {/**Button to close modal */}
+          <button onClick={()=>{ setMovieDetails(null); setSelectedMovieId(null)}} style={{ float: 'right' }}>
+            X
+          </button>
+
+          <h2>{movieDetails.title}</h2>
+          <p><strong>Release Date:</strong> {movieDetails.release_date}</p>
+          <p><strong>Runtime:</strong> {movieDetails.minutes}</p>
+          <p><strong>Synopsis:</strong> {movieDetails.overview}</p>
+          <p><strong>Released:</strong> {movieDetails.status === "Released" ? "Yes" : "No"}</p>
+          <p><strong>Director:</strong> {
+            movieDetails.credits.crew.find(person => person.job === 'Director')?.name || 'N/A'
+          }</p>
+          {/**Show the first 5 cast members */}
+          <p><strong>Cast:</strong> {
+            movieDetails.credits.cast.slice(0,5).map(actor => actor.name).join(', ')
+          }</p>         
+        </div>
       )}
     </div>
   );
