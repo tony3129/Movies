@@ -47,7 +47,7 @@ router.get('/genres/:genreID', async (req, res) =>{
 })
 
 //api request for movies by search parameter
-router.get('search', async (req,res)=>{
+router.get('/search', async (req,res)=>{
     try{
         const { query } = req.params;
         //check if query is valid (not empty string, undefined, etc)
