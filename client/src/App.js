@@ -11,6 +11,8 @@ function App() {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [genres, setGenres] = useState([]);
   const [genreMovies, setGenreMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   //calls to populate trending and genre data on first mount
   useEffect(() =>{
@@ -34,6 +36,23 @@ function App() {
       .then((data) => setGenreMovies(data?.results || []));
     }
   },[selectedGenre]);
+
+  const handleSearch = () => {
+    //check if search is valid (not empty string, undefined, etc)
+    if(!searchTerm.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    fetch(`/api/search?query=${encodeURIComponent(searchTerm)}`)
+    .then(res => res.json())
+    .then(data => {
+      setSearchResults(data.results || []);
+      setTrending([]);
+      setGenreMovies([]);
+      setSelectedGenre(null);
+    });
+  }
 
 
   return (
