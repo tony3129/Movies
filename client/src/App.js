@@ -14,6 +14,8 @@ function App() {
   const [genreMovies, setGenreMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [movieDetails, setMovieDetails] = useState(null);
 
   //debounce search for 500ms (custom hook)
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -55,6 +57,7 @@ function App() {
     }
   }, [debouncedSearchTerm]);
 
+  //handler for searching movies
   const handleSearch = (term) => {
     const query = term.trim();
     //check if search is valid (not empty string, undefined, etc)
@@ -71,6 +74,14 @@ function App() {
       setGenreMovies([]);
       setSelectedGenre(null);
     });
+  }
+
+  //handler for movie details
+  const handleMovieClick = (movieId) => {
+    setSelectedMovieId(movieId);
+    fetch(`/api/movie/${movieId}`)
+    .then(res => res.json())
+    .then(data => setMovieDetails(data))
   }
 
 
