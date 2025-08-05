@@ -4,6 +4,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import MovieCard from './components/MovieCard';
 import GenreDropdown from './components/GenreDropdown';
+import useDebounce from './hooks/useDebounce';
 
 function App() {
   //states to hold movie information
@@ -13,6 +14,9 @@ function App() {
   const [genreMovies, setGenreMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+
+  //debounce search for 500ms (custom hook)
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   //calls to populate trending and genre data on first mount
   useEffect(() =>{
@@ -36,6 +40,15 @@ function App() {
       .then((data) => setGenreMovies(data?.results || []));
     }
   },[selectedGenre]);
+
+  //once search term is set, calls handle search for api request
+  useEffect(() => {
+    if(debouncedSearchTerm){
+      handleSearch(debouncedSearchTerm);
+    } else {
+      setSearchResults([]);
+    }
+  }, [debouncedSearchTerm]);
 
   const handleSearch = (term) => {
     const query = term.trim();
@@ -66,7 +79,6 @@ function App() {
           value={searchTerm}
           onChange={(e)=> {
             setSearchTerm(e.target.value);
-            handleSearch(e.target.value);
           }}
           style={{ padding: '0.5rem', width: '250px', marginRight: '0.5rem' }}
         />
