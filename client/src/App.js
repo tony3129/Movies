@@ -14,7 +14,6 @@ function App() {
   const [genreMovies, setGenreMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [movieDetails, setMovieDetails] = useState(null);
 
   //debounce search for 500ms (custom hook)
@@ -78,7 +77,6 @@ function App() {
 
   //handler for movie details
   const handleMovieClick = (movieId) => {
-    setSelectedMovieId(movieId);
     fetch(`/api/movie/${movieId}`)
     .then(res => res.json())
     .then(data => setMovieDetails(data))
@@ -138,35 +136,49 @@ function App() {
         </>
       )}
       {movieDetails && (
-        //temp style for modal 
-        <div style={{
-          position: 'fixed',
-          top: '10%',
-          left: '10%',
-          width: '80%',
-          backgroundColor: 'white',
-          padding: '1rem',
-          boxShadow: '0 0 10px rgba(0,0,0,0.5)',
-          zIndex: 999
-        }}>
-          {/**Button to close modal */}
-          <button onClick={()=>{ setMovieDetails(null); setSelectedMovieId(null)}} style={{ float: 'right' }}>
-            X
-          </button>
+        <>
+          {/**Temp background blur for modal */}
+          <div
+            onClick={() => { setMovieDetails(null); }}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0,
+              width: '100vw', height: '100vh',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              zIndex: 998,
+              cursor: 'pointer',
+            }}
+          />
+          {/*temp style for modal*/}
+          <div style={{
+            position: 'fixed',
+            top: '10%',
+            left: '10%',
+            width: '80%',
+            backgroundColor: 'white',
+            padding: '1rem',
+            boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+            zIndex: 999
+          }}>
+            {/**Button to close modal */}
+            <button onClick={()=>{ setMovieDetails(null); }} style={{ float: 'right' }}>
+              X
+            </button>
 
-          <h2>{movieDetails.title}</h2>
-          <p><strong>Release Date:</strong> {movieDetails.release_date}</p>
-          <p><strong>Runtime:</strong> {movieDetails.minutes}</p>
-          <p><strong>Synopsis:</strong> {movieDetails.overview}</p>
-          <p><strong>Released:</strong> {movieDetails.status === "Released" ? "Yes" : "No"}</p>
-          <p><strong>Director:</strong> {
-            movieDetails.credits.crew.find(person => person.job === 'Director')?.name || 'N/A'
-          }</p>
-          {/**Show the first 5 cast members */}
-          <p><strong>Cast:</strong> {
-            movieDetails.credits.cast.slice(0,5).map(actor => actor.name).join(', ')
-          }</p>         
-        </div>
+            <h2>{movieDetails.title}</h2>
+            <p><strong>Release Date:</strong> {movieDetails.release_date}</p>
+            <p><strong>Runtime:</strong> {movieDetails.runtime} minutes</p>
+            <p><strong>Synopsis:</strong> {movieDetails.overview}</p>
+            <p><strong>Released:</strong> {movieDetails.status === "Released" ? "Yes" : "No"}</p>
+            <p><strong>Director:</strong> {
+              movieDetails.credits.crew.find(person => person.job === 'Director')?.name || 'N/A'
+            }</p>
+            {/**Show the first 5 cast members */}
+            <p><strong>Cast:</strong> {
+              movieDetails.credits.cast.slice(0,5).map(actor => actor.name).join(', ')
+            }</p>         
+          </div>        
+        </>
       )}
     </div>
   );
