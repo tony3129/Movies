@@ -47,6 +47,11 @@ function App() {
       handleSearch(debouncedSearchTerm);
     } else {
       setSearchResults([]);
+
+      //repopulate trending movies, when search is empty
+      fetch('/api/trending')
+      .then((res) => res.json())
+      .then((data) => setTrending(data.results));
     }
   }, [debouncedSearchTerm]);
 
