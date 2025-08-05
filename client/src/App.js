@@ -37,14 +37,15 @@ function App() {
     }
   },[selectedGenre]);
 
-  const handleSearch = () => {
+  const handleSearch = (term) => {
+    const query = term.trim();
     //check if search is valid (not empty string, undefined, etc)
-    if(!searchTerm.trim()) {
+    if(!query) {
       setSearchResults([]);
       return;
     }
 
-    fetch(`/api/search?query=${encodeURIComponent(searchTerm)}`)
+    fetch(`/api/search?query=${encodeURIComponent(query)}`)
     .then(res => res.json())
     .then(data => {
       setSearchResults(data.results || []);
@@ -57,28 +58,55 @@ function App() {
 
   return (
     <div style={{ padding: '1rem '}}>
-      <h1>Trending Movies</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {/*create MovieCard for each movie*/}
-        {trending.map((movie)=>{
-          return <MovieCard key={movie.id} movie={movie}/>
-        })}
+      {/*Search results*/}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+        <input
+          type="text"
+          placeholder="Search Movies..."
+          value={searchTerm}
+          onChange={(e)=> {
+            setSearchTerm(e.target.value);
+            handleSearch(e.target.value);
+          }}
+          style={{ padding: '0.5rem', width: '250px', marginRight: '0.5rem' }}
+        />
       </div>
-
-      <h2>Select Genre</h2>
-      {/*Pass setSelectedGenre to GenreDropDown component*/}
-      <GenreDropdown genres={genres} onSelect={setSelectedGenre}/>
-
-      {genreMovies.length > 0 && (
+      
+      {searchResults.length > 0 ? (
         <>
-          {/*use + to convert string to number, and ? for match or for undefined*/}
-          <h3>Most Popular Movies in {' '} {genres.find((g)=> g.id === +selectedGenre)?.name}</h3>
-          <div style={{ display:'flex', flexWrap: 'wrap' }}>
-            {/*Create MovieCard for each matched movie*/}
-            {genreMovies.map((movie)=>{
+          <h2>Search Results</h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap'}}>
+            {searchResults.map((movie)=>{
               return <MovieCard key={movie.id} movie={movie}/>
             })}
           </div>
+        </>
+      ) : ( 
+        <>
+          <h1>Trending Movies</h1>
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {/*create MovieCard for each movie*/}
+            {trending.map((movie)=>{
+              return <MovieCard key={movie.id} movie={movie}/>
+            })}
+          </div>
+
+          <h2>Select Genre</h2>
+          {/*Pass setSelectedGenre to GenreDropDown component*/}
+          <GenreDropdown genres={genres} onSelect={setSelectedGenre}/>
+
+          {genreMovies.length > 0 && (
+            <>
+              {/*use + to convert string to number, and ? for match or for undefined*/}
+              <h3>Most Popular Movies in {' '} {genres.find((g)=> g.id === +selectedGenre)?.name}</h3>
+              <div style={{ display:'flex', flexWrap: 'wrap' }}>
+                {/*Create MovieCard for each matched movie*/}
+                {genreMovies.map((movie)=>{
+                  return <MovieCard key={movie.id} movie={movie}/>
+                })}
+              </div>
+            </>
+          )}
         </>
       )}
     </div>
