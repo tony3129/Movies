@@ -15,7 +15,7 @@ function MovieCard({ movie, onClick }){
                 alt={movie.title}
                 style={{ width: '100%' }}
             />
-            <p>{movie.title}</p>
+            <h4>{movie.title}</h4>
         </div>
     )
 }
