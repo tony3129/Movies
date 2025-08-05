@@ -66,4 +66,20 @@ router.get('/search', async (req,res)=>{
     }
 })
 
+//api request for movie details
+router.get('/movie/:id', async (req,res) => {
+    try{
+        const { id } = req.params;
+        const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}`, {
+            params: {
+                api_key: TMDB_API_KEY,
+                append_to_response: 'credits'
+            }
+        });
+        res.json(response.data);
+    } catch (err){
+        res.status(500).json({ error: 'Failed to fetch movie details' });
+    }
+})
+
 module.exports = router;
