@@ -84,51 +84,71 @@ function App() {
 
 
   return (
-    <div style={{ padding: '1rem '}}>
+    <div className="p-4 max-w-7xl mx-auto bg-base-100 min-h-screen">
+      
       {/*Search results*/}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+      <div className="flex justify-end mb-4">
         <input
           type="text"
           placeholder="Search Movies..."
+          className="input border border-gray-400 rounded-lg"
           value={searchTerm}
           onChange={(e)=> {
             setSearchTerm(e.target.value);
           }}
-          style={{ padding: '0.5rem', width: '250px', marginRight: '0.5rem' }}
         />
       </div>
       
       {searchResults.length > 0 ? (
         <>
-          <h2>Search Results</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap'}}>
+          <h2 className="text-3xl font-semibold mb-6">Search Results</h2>
+          <div className="flex flex-wrap gap-4 mb-8">
             {searchResults.map((movie)=>{
-              return <MovieCard key={movie.id} movie={movie} onClick={() => handleMovieClick(movie.id)}/>
+              return <MovieCard 
+                key={movie.id} 
+                movie={movie} 
+                onClick={() => handleMovieClick(movie.id)}
+              />
             })}
           </div>
         </>
       ) : ( 
         <>
-          <h1>Trending Movies</h1>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <h1 className="text-3xl font-bold mb-6 ">Trending Movies</h1>
+          <div className="flex flex-wrap gap-4 mb-8">
             {/*create MovieCard for each movie*/}
             {trending.map((movie)=>{
-              return <MovieCard key={movie.id} movie={movie} onClick={() => handleMovieClick(movie.id)}/>
+              return <MovieCard 
+                key={movie.id} 
+                movie={movie} 
+                onClick={() => handleMovieClick(movie.id)}
+              />
             })}
           </div>
 
-          <h2>Select Genre</h2>
+          <h2 className="text-2xl font-semibold mb-4">Select Genre</h2>
           {/*Pass setSelectedGenre to GenreDropDown component*/}
-          <GenreDropdown genres={genres} onSelect={setSelectedGenre}/>
+          <div className="flex mb-8">
+            <GenreDropdown genres={genres} onSelect={setSelectedGenre} />
+          </div>
 
           {genreMovies.length > 0 && (
             <>
               {/*use + to convert string to number, and ? for match or for undefined*/}
-              <h3>Most Popular Movies in {' '} {genres.find((g)=> g.id === +selectedGenre)?.name}</h3>
-              <div style={{ display:'flex', flexWrap: 'wrap' }}>
+              <h3 className="text-xl font-semibold mb-4">
+                Most Popular Movies in {' '} 
+                <span className="text-indigo-600">
+                  {genres.find((g) => g.id === +selectedGenre)?.name}
+                </span>
+              </h3>
+              <div className="flex flex-wrap gap-4">
                 {/*Create MovieCard for each matched movie*/}
                 {genreMovies.map((movie)=>{
-                  return <MovieCard key={movie.id} movie={movie} onClick={() => handleMovieClick(movie.id)}/>
+                  return <MovieCard 
+                    key={movie.id} 
+                    movie={movie} 
+                    onClick={() => handleMovieClick(movie.id)}
+                  />
                 })}
               </div>
             </>
@@ -136,36 +156,26 @@ function App() {
         </>
       )}
       {movieDetails && (
-        <>
-          {/**Temp background blur for modal */}
+        <div
+          className="modal modal-open"
+          // click outside closes modal
+          onClick={() => setMovieDetails(null)} 
+        >
           <div
-            onClick={() => { setMovieDetails(null); }}
-            style={{
-              position: 'fixed',
-              top: 0, left: 0,
-              width: '100vw', height: '100vh',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              zIndex: 998,
-              cursor: 'pointer',
-            }}
-          />
-          {/*temp style for modal*/}
-          <div style={{
-            position: 'fixed',
-            top: '10%',
-            left: '10%',
-            width: '80%',
-            backgroundColor: 'white',
-            padding: '1rem',
-            boxShadow: '0 0 10px rgba(0,0,0,0.5)',
-            zIndex: 999
-          }}>
-            {/**Button to close modal */}
-            <button onClick={()=>{ setMovieDetails(null); }} style={{ float: 'right' }}>
-              X
+            className="modal-box bg-white text-black"
+            //to stop close if clicked inside modal
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setMovieDetails(null)}
+              className="btn btn-circle btn-ghost btn-sm absolute right-4 top-4"
+              aria-label="Close modal"
+            >
+              ✕
             </button>
 
-            <h2>{movieDetails.title}</h2>
+            <h2 className="text-2xl font-semibold mb-4">{movieDetails.title}</h2>
             <p><strong>Release Date:</strong> {movieDetails.release_date}</p>
             <p><strong>Runtime:</strong> {movieDetails.runtime} minutes</p>
             <p><strong>Synopsis:</strong> {movieDetails.overview}</p>
@@ -173,13 +183,13 @@ function App() {
             <p><strong>Director:</strong> {
               movieDetails.credits.crew.find(person => person.job === 'Director')?.name || 'N/A'
             }</p>
-            {/**Show the first 5 cast members */}
             <p><strong>Cast:</strong> {
-              movieDetails.credits.cast.slice(0,5).map(actor => actor.name).join(', ')
-            }</p>         
-          </div>        
-        </>
+              movieDetails.credits.cast.slice(0, 5).map(actor => actor.name).join(', ')
+            }</p>
+          </div>
+        </div>
       )}
+
     </div>
   );
 }
