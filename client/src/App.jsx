@@ -2,8 +2,10 @@
 import './App.css';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import MovieCard from './components/MovieCard';
-import GenreDropdown from './components/GenreDropdown';
+import SearchBar from './components/SearchBar';
+import MovieGrid from './components/MovieGrid';
+import MovieDetailsModal from './components/MoveDetailsModal';
+import GenreSection from './components/GenreSection';
 import useDebounce from './hooks/useDebounce';
 
 function App() {
@@ -69,6 +71,7 @@ function App() {
     .then(res => res.json())
     .then(data => {
       setSearchResults(data.results || []);
+      //clear trending, genremovies and selectedgenre to search results can take over the page
       setTrending([]);
       setGenreMovies([]);
       setSelectedGenre(null);
@@ -85,109 +88,32 @@ function App() {
 
   return (
     <div className="p-4 max-w-7xl mx-auto bg-base-100 min-h-screen">
-      
-      {/*Search results*/}
-      <div className="flex justify-end mb-4">
-        <input
-          type="text"
-          placeholder="Search Movies..."
-          className="input border border-gray-400 rounded-lg"
-          value={searchTerm}
-          onChange={(e)=> {
-            setSearchTerm(e.target.value);
-          }}
-        />
-      </div>
-      
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {searchResults.length > 0 ? (
         <>
           <h2 className="text-3xl font-semibold mb-6">Search Results</h2>
-          <div className="flex flex-wrap gap-4 mb-8">
-            {searchResults.map((movie)=>{
-              return <MovieCard 
-                key={movie.id} 
-                movie={movie} 
-                onClick={() => handleMovieClick(movie.id)}
-              />
-            })}
-          </div>
+          <MovieGrid movies={searchResults} onMovieClick={handleMovieClick} />
         </>
       ) : ( 
         <>
           <h1 className="text-3xl font-bold mb-6 ">Trending Movies</h1>
-          <div className="flex flex-wrap gap-4 mb-8">
-            {/*create MovieCard for each movie*/}
-            {trending.map((movie)=>{
-              return <MovieCard 
-                key={movie.id} 
-                movie={movie} 
-                onClick={() => handleMovieClick(movie.id)}
-              />
-            })}
-          </div>
+          <MovieGrid movies={trending} onMovieClick={handleMovieClick} />
 
           <h2 className="text-2xl font-semibold mb-4">Select Genre</h2>
-          {/*Pass setSelectedGenre to GenreDropDown component*/}
-          <div className="flex mb-8">
-            <GenreDropdown genres={genres} onSelect={setSelectedGenre} />
-          </div>
-
-          {genreMovies.length > 0 && (
-            <>
-              {/*use + to convert string to number, and ? for match or for undefined*/}
-              <h3 className="text-xl font-semibold mb-4">
-                Most Popular Movies in {' '} 
-                <span className="text-indigo-600">
-                  {genres.find((g) => g.id === +selectedGenre)?.name}
-                </span>
-              </h3>
-              <div className="flex flex-wrap gap-4">
-                {/*Create MovieCard for each matched movie*/}
-                {genreMovies.map((movie)=>{
-                  return <MovieCard 
-                    key={movie.id} 
-                    movie={movie} 
-                    onClick={() => handleMovieClick(movie.id)}
-                  />
-                })}
-              </div>
-            </>
-          )}
+          <GenreSection
+            genres={genres}
+            selectedGenre={selectedGenre}
+            setSelectedGenre={setSelectedGenre}
+            genreMovies={genreMovies}
+            onMovieClick={handleMovieClick}
+          />
         </>
       )}
       {movieDetails && (
-        <div
-          className="modal modal-open"
-          // click outside closes modal
-          onClick={() => setMovieDetails(null)} 
-        >
-          <div
-            className="modal-box bg-white text-black"
-            //to stop close if clicked inside modal
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              onClick={() => setMovieDetails(null)}
-              className="btn btn-circle btn-ghost btn-sm absolute right-4 top-4"
-              aria-label="Close modal"
-            >
-              ✕
-            </button>
-
-            <h2 className="text-2xl font-semibold mb-4">{movieDetails.title}</h2>
-            <p><strong>Release Date:</strong> {movieDetails.release_date}</p>
-            <p><strong>Runtime:</strong> {movieDetails.runtime} minutes</p>
-            <p><strong>Synopsis:</strong> {movieDetails.overview}</p>
-            <p><strong>Released:</strong> {movieDetails.status === "Released" ? "Yes" : "No"}</p>
-            <p><strong>Director:</strong> {
-              movieDetails.credits.crew.find(person => person.job === 'Director')?.name || 'N/A'
-            }</p>
-            <p><strong>Cast:</strong> {
-              movieDetails.credits.cast.slice(0, 5).map(actor => actor.name).join(', ')
-            }</p>
-          </div>
-        </div>
+        <MovieDetailsModal
+          movieDetails={movieDetails}
+          onClose={() => setMovieDetails(null)}
+        />
       )}
 
     </div>
