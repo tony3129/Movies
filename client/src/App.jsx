@@ -88,16 +88,25 @@ function App() {
 
   return (
     <div className="p-4 max-w-7xl mx-auto bg-base-100 min-h-screen">
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <SearchBar 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+      />
       {searchResults.length > 0 ? (
         <>
           <h2 className="text-3xl font-semibold mb-6">Search Results</h2>
-          <MovieGrid movies={searchResults} onMovieClick={handleMovieClick} />
+          <MovieGrid 
+            movies={searchResults} 
+            onMovieClick={handleMovieClick} 
+          />
         </>
       ) : ( 
         <>
           <h1 className="text-3xl font-bold mb-6 ">Trending Movies</h1>
-          <MovieGrid movies={trending} onMovieClick={handleMovieClick} />
+          <MovieGrid 
+            movies={trending} 
+            onMovieClick={handleMovieClick} 
+          />
 
           <h2 className="text-2xl font-semibold mb-4">Select Genre</h2>
           <GenreSection

@@ -7,7 +7,10 @@ function GenreSection({ genres, selectedGenre, setSelectedGenre, genreMovies, on
     <>
         {/*Pass setSelectedGenre to GenreDropDown component*/}
         <div className="flex mb-8">
-            <GenreDropdown genres={genres} onSelect={setSelectedGenre} />
+            <GenreDropdown 
+              genres={genres} 
+              onSelect={setSelectedGenre} 
+            />
         </div>
 
         {genreMovies.length > 0 && (
@@ -20,7 +23,10 @@ function GenreSection({ genres, selectedGenre, setSelectedGenre, genreMovies, on
                 </span>
             </h3>
             {/*Create MovieCard for each matched movie*/}
-            <MovieGrid movies={genreMovies} onMovieClick={onMovieClick} />
+            <MovieGrid 
+              movies={genreMovies} 
+              onMovieClick={onMovieClick} 
+            />
             </>
         )}
     </>

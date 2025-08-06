@@ -8,9 +8,9 @@ function MovieGrid({ movies, onMovieClick }) {
         {/*create MovieCard for each movie*/}
         {movies.map((movie) => (
             <MovieCard
-            key={movie.id}
-            movie={movie}
-            onClick={() => onMovieClick(movie.id)}
+              key={movie.id}
+              movie={movie}
+              onClick={() => onMovieClick(movie.id)}
             />
         ))}
     </div>
