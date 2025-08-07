@@ -21,11 +21,13 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [movieDetails, setMovieDetails] = useState(null);
 
+  //custom hooks to render components
   const { trending, isTrendingLoading } = useFetchTrending(searchTerm);
   const { genres, selectedGenre, setSelectedGenre, isGenresLoading } = useFetchGenres();
   const { genreMovies, isGenreMoviesLoading } = useFetchGenreMovies(selectedGenre);
   const { searchResults, isSearchLoading } = useSearchMovies(searchTerm);
 
+  //finds specific movie details based on user input
   const handleMovieClick = (id) => fetchMovieDetails(id, setMovieDetails);
 
   return (
@@ -34,7 +36,7 @@ function App() {
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
       />
-      {/*remove trending and genre movies if searching*/}
+      {/*remove trending and genre movies if searching, and display searched movies component*/}
       {searchResults.length > 0 ? (
         <>
           <h2 className="text-3xl font-semibold mb-6">Search Results</h2>
@@ -51,6 +53,7 @@ function App() {
         </>
       ) : ( 
         <>
+         {/*Component to display current trending movies based on TMDB*/}
           <h1 className="text-3xl font-bold mb-6 ">Trending Movies</h1>
           {isTrendingLoading ? (
             <LoadingSpinner
@@ -62,7 +65,7 @@ function App() {
               onMovieClick={handleMovieClick} 
             />
           )}
-
+          {/*Component to display genres and current popular movies by genre based on TMDB*/}
           <h2 className="text-2xl font-semibold mb-4">Select Genre</h2>
           {(isGenresLoading || isGenreMoviesLoading) ? (
             <LoadingSpinner
