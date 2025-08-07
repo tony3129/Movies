@@ -1,6 +1,7 @@
 import React from 'react';
 import GenreDropdown from './GenreDropdown';
 import MovieGrid from './MovieGrid';
+import MovieCarousel from './MovieCarousel';
 
 function GenreSection({ genres, selectedGenre, setSelectedGenre, genreMovies, onMovieClick }) {
   return (
@@ -10,6 +11,7 @@ function GenreSection({ genres, selectedGenre, setSelectedGenre, genreMovies, on
             <GenreDropdown 
               genres={genres} 
               onSelect={setSelectedGenre} 
+              selectedGenre={selectedGenre}
             />
         </div>
 
@@ -23,7 +25,7 @@ function GenreSection({ genres, selectedGenre, setSelectedGenre, genreMovies, on
                 </span>
             </h3>
             {/*Create MovieCard for each matched movie*/}
-            <MovieGrid 
+            <MovieCarousel
               movies={genreMovies} 
               onMovieClick={onMovieClick} 
             />
