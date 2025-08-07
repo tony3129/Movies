@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+//env variable for api access in deployment or development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 //fetch most popular movies based on selected genre
 function useFetchGenreMovies(selectedGenre) {
@@ -12,7 +14,7 @@ function useFetchGenreMovies(selectedGenre) {
 
         setIsGenreMoviesLoading(true);
         //fetch api, and store results in genreMovies, have loading spinner in the meantime
-        fetch(`/api/genres/${selectedGenre}`)
+        fetch(`${API_BASE_URL}/genres/${selectedGenre}`)
         .then(res => res.json())
         //added safety for if returned fetch is empty
         .then(data => setGenreMovies(data?.results || []))

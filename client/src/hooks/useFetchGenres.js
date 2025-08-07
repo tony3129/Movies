@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+//env variable for api access in deployment or development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 //fetch genres based on genres defined by TMDB
 function useFetchGenres() {
@@ -10,7 +12,7 @@ function useFetchGenres() {
         setIsGenresLoading(true);
 
         //fetch api, and store results in genres, have loading spinner in the meantime
-        fetch('/api/genres')
+        fetch(`${API_BASE_URL}/genres`)
         .then(res => res.json())
         .then((data) => {
             const fetchGenres = data.genres || [];
