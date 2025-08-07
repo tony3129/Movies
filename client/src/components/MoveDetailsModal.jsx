@@ -1,6 +1,22 @@
 import React from 'react';
+import { useEffect } from 'react';
 
 function MovieDetailsModal({ movieDetails, onClose }) {
+    useEffect(() => {
+    // calculate scrollbar width to avoid layout shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    // lock scroll and add padding to compensate for scrollbar removal
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+    //cleanup when modal closes
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    };
+  }, []);
+
   if (!movieDetails) return null;
 
   return (
