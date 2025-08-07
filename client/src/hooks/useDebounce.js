@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+//to add delay before search function fetch happens
 function useDebounce(value, delay = 500) {
     const [debouncedValue, setDebounceValue] = useState(value);
 
